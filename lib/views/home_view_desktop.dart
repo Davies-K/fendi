@@ -1,7 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/constants/constants.dart';
+import 'dart:math' as math;
 
 class HomeDesktopView extends StatefulWidget {
   @override
@@ -9,112 +11,243 @@ class HomeDesktopView extends StatefulWidget {
 }
 
 class _HomeDesktopViewState extends State<HomeDesktopView> {
+  ScrollController _scrollController = new ScrollController();
+
+  List<ImagePoster> _imagePosters = [];
+  double _width = Get.width * 0.20;
+
+  @override
+  void initState() {
+    initializeImages();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Row(children: [
-      Expanded(
-          flex: 1,
-          child: Container(
-              color: AppColors.secondaryColor,
-              child: Stack(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SlideInDown(
-                        from: 450,
-                        duration: Duration(milliseconds: 6600),
-                        //infinite: true,
-                        child: Container(
-                          height: double.infinity,
-                          //width: 150,
-                          child: RotatedBox(
-                              quarterTurns: 3,
-                              child: Center(
-                                  child: Text("2021 Woman Spring",
-                                      textAlign: TextAlign.center,
-                                      //overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.lato(
-                                          color:
-                                              Color.fromRGBO(154, 116, 84, 0.6),
-                                          fontSize: 100,
-                                          fontWeight: FontWeight.w500)))),
+    return Stack(children: [
+      Container(
+          child: Row(children: [
+        Expanded(
+            flex: 1,
+            child: Container(
+                color: AppColors.secondaryColor,
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SlideInDown(
+                          from: 450,
+
+                          duration: Duration(milliseconds: 6600),
+                          //infinite: true,
+                          child: Container(
+                            height: double.infinity,
+                            //width: 150,
+                            child: RotatedBox(
+                                quarterTurns: 3,
+                                child: Center(
+                                    child: Text("2021 Woman Spring",
+                                        textAlign: TextAlign.center,
+                                        //overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.lato(
+                                            color: Color.fromRGBO(
+                                                154, 116, 84, 0.6),
+                                            fontSize: 100,
+                                            fontWeight: FontWeight.w500)))),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 200)
-                    ],
-                  ),
+                        SizedBox(width: 200)
+                      ],
+                    ),
+                    Positioned(
+                        top: 20,
+                        left: 20,
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('FENDI',
+                                  style: TextStyle(
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold)),
+                              Text('ROMA',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600)),
+                            ])),
+                    Positioned(
+                        bottom: 200,
+                        right: 20,
+                        child: Container(
+                          width: 150,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    print('tapped');
+                                    deleteFirstPost(0);
+                                  },
+                                  icon: Icon(Icons.west)),
+                              SizedBox(width: 10),
+                              Text(' 16/50 ', style: GoogleFonts.lato()),
+                              SizedBox(width: 10),
+                              IconButton(
+                                  onPressed: () {
+                                    _scrollToIndex(2);
+                                  },
+                                  icon: Icon(Icons.east))
+                            ],
+                          ),
+                        ))
+                  ],
+                ))),
+        Expanded(
+            flex: 1,
+            child: Container(
+                color: AppColors.primaryColor,
+                child: Stack(children: [
                   Positioned(
                       top: 20,
-                      left: 20,
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('FENDI',
-                                style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold)),
-                            Text('ROMA',
-                                style: TextStyle(
-                                    fontSize: 10, fontWeight: FontWeight.w600)),
-                          ])),
+                      right: 20,
+                      child: Row(children: [
+                        Icon(Icons.vertical_align_bottom,
+                            color: Colors.white, size: 18),
+                        SizedBox(width: 5),
+                        Text(' DOWNLOAD THE CATALOGUE',
+                            style: GoogleFonts.lato(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600)),
+                      ])),
                   Positioned(
                       bottom: 200,
-                      right: 20,
+                      right: 0,
                       child: Container(
-                        width: 150,
+                        //width: 150,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Icon(Icons.west),
-                            SizedBox(width: 10),
-                            Text(' 16/50 ', style: GoogleFonts.lato()),
-                            SizedBox(width: 10),
-                            Icon(Icons.east),
+                            Text(' Store Locator |',
+                                style: GoogleFonts.lato(color: Colors.white)),
+                            SizedBox(width: 5),
+                            Text(' Contact Us |',
+                                style: GoogleFonts.lato(color: Colors.white)),
+                            SizedBox(width: 5),
+                            Text(' Book An appointment',
+                                style: GoogleFonts.lato(color: Colors.white)),
+                            SizedBox(width: 5),
                           ],
                         ),
                       ))
-                ],
-              ))),
-      Expanded(
-          flex: 1,
-          child: Container(
-              color: AppColors.primaryColor,
-              child: Stack(children: [
-                Positioned(
-                    top: 20,
-                    right: 20,
-                    child: Row(children: [
-                      Icon(Icons.vertical_align_bottom,
-                          color: Colors.white, size: 18),
-                      SizedBox(width: 5),
-                      Text(' DOWNLOAD THE CATALOGUE',
-                          style: GoogleFonts.lato(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600)),
-                    ])),
-                Positioned(
-                    bottom: 200,
-                    right: 0,
-                    child: Container(
-                      //width: 150,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(' Store Locator |',
-                              style: GoogleFonts.lato(color: Colors.white)),
-                          SizedBox(width: 5),
-                          Text(' Contact Us |',
-                              style: GoogleFonts.lato(color: Colors.white)),
-                          SizedBox(width: 5),
-                          Text(' Book An appointment',
-                              style: GoogleFonts.lato(color: Colors.white)),
-                          SizedBox(width: 5),
-                        ],
-                      ),
-                    ))
-              ])))
-    ]));
+                ])))
+      ])),
+
+      //Container with horizontal images and stack piled images
+      Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Center(
+              child: Container(
+                  height: 400,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: Row(
+                    children: [
+                      Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Center(
+                            child: Stack(children: [
+                              Transform.rotate(
+                                angle: math.pi / 50,
+                                child: ClipRRect(
+                                  child: Image(
+                                    image: NetworkImage(
+                                        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg"),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.13,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Transform.rotate(
+                                angle: -math.pi / 50,
+                                child: ClipRRect(
+                                  child: Image(
+                                    image: NetworkImage(
+                                        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg"),
+                                    width: MediaQuery.of(context).size.width *
+                                        0.13,
+                                    height: 300,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ]),
+                          )),
+
+                      //right middle container
+                      Expanded(
+                          child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              controller: _scrollController,
+                              children: _imagePosters.map((ImagePoster item) {
+                                return singeImageDisplay(item);
+                              }).toList()))
+                    ],
+                  ))))
+    ]);
   }
+
+  // Define the function that scroll to an item
+  void _scrollToIndex(index) {
+    _scrollController.animateTo(_width * index,
+        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+  }
+
+  void deleteFirstPost(index) {
+    setState(() {
+      _imagePosters.removeAt(index);
+    });
+  }
+
+  List<ImagePoster> initializeImages() {
+    _imagePosters = [];
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/236a07f777d662b78b9c23337194ff36.jpg",
+        "red"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/a0bd071d00d0d68e4ce497d21af2e462.jpg",
+        "red"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg",
+        "red"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2677bf655081c90cfa01a60b52f91399.jpg",
+        "red"));
+
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/306e07a7380a27fe09cc63c3c304bc9a.jpg",
+        "red"));
+    return _imagePosters;
+  }
+
+  Widget singeImageDisplay(ImagePoster poster) {
+    return ClipRRect(
+      child: Image(
+        image: NetworkImage(poster.imagePath),
+        width: MediaQuery.of(context).size.width * 0.20,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
+
+class ImagePoster {
+  final String imagePath;
+  final String backgroundColor;
+
+  ImagePoster(this.imagePath, this.backgroundColor);
 }

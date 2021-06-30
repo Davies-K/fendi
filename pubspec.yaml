@@ -20,6 +20,7 @@ dependencies:
   responsive_builder: ^0.4.1
   google_fonts: ^2.1.0
   animate_do: ^2.0.0
+  get: ^4.1.4
 
 dev_dependencies:
   flutter_test:
