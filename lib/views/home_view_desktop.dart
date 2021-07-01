@@ -13,6 +13,7 @@ class HomeDesktopView extends StatefulWidget {
 class _HomeDesktopViewState extends State<HomeDesktopView>
     with SingleTickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
+  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   late AnimationController _controller;
 
   bool _showPreviousIcon = false;
@@ -20,10 +21,19 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
 
   List<ImagePoster> _imagePosters = [];
   List<ImagePoster> _rotatedPosters = [];
+
+  List<ImagePoster> _items = [];
+
   int _totalNumberOfImages = 0;
   int _currentIndex = 0;
 
   double _width = Get.width * 0.20;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -33,7 +43,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     });
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 700),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     );
 
@@ -106,6 +116,14 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                   ? IconButton(
                                       onPressed: () {
                                         print('tapped');
+                                        ImagePoster poster =
+                                            _rotatedPosters.last;
+                                        listKey.currentState!.insertItem(0,
+                                            duration: const Duration(
+                                                milliseconds: 550));
+
+                                        // _imagePosters.add(poster);
+
                                         addFirstPost(0);
                                       },
                                       icon: Icon(Icons.west))
@@ -118,6 +136,12 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                   ? IconButton(
                                       onPressed: () {
                                         _playAnimation();
+                                        listKey.currentState!.removeItem(
+                                            0,
+                                            (_, animation) =>
+                                                slideIt(context, 0, animation),
+                                            duration: const Duration(
+                                                milliseconds: 550));
                                         //_scrollToIndex(2);
                                         deleteFirstPost(0);
                                       },
@@ -193,22 +217,51 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                           )),
 
                       //right middle container
+                      // Expanded(
+                      //     child: ListView(
+                      //         scrollDirection: Axis.horizontal,
+                      //         controller: _scrollController,
+                      //         children: _imagePosters.map((ImagePoster item) {
+                      //           return singeImageDisplay(item);
+                      //         }).toList()))
                       Expanded(
-                          child: ListView(
+                          child: AnimatedList(
                               scrollDirection: Axis.horizontal,
-                              controller: _scrollController,
-                              children: _imagePosters.map((ImagePoster item) {
-                                return singeImageDisplay(item);
-                              }).toList()))
+                              key: listKey,
+                              initialItemCount: _totalNumberOfImages,
+                              itemBuilder: (context, index, animation) {
+                                return slideIt(context, index, animation);
+                              }))
                     ],
                   ))))
     ]);
   }
 
+  Widget slideIt(BuildContext context, int index, animation) {
+    ImagePoster item = _imagePosters[index];
+
+    return FadeTransition(
+      opacity: animation,
+      child: ScaleTransition(
+        scale: animation,
+        child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-40, 0),
+              end: Offset(0, 0),
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCirc,
+              reverseCurve: Curves.easeOutCirc,
+            )),
+            child: singeImageDisplay(item)),
+      ),
+    );
+  }
+
   // Define the function that scroll to an item
   Future<void> _scrollToIndex(index) async {
     _scrollController.animateTo(_width * index,
-        duration: Duration(milliseconds: 400), curve: Curves.easeIn);
+        duration: Duration(milliseconds: 600), curve: Curves.easeIn);
   }
 
   Future<void> deleteFirstPost(index) async {
@@ -217,6 +270,11 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
         ? (lastRotatedIndex = 0)
         : (lastRotatedIndex = _rotatedPosters.length);
     ImagePoster poster = _imagePosters.first;
+
+    //reset animation
+    _controller.reset();
+    _controller.forward();
+
     setState(() {
       _imagePosters.removeAt(index);
       _rotatedPosters.insert(lastRotatedIndex, poster);
@@ -232,6 +290,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
 
   Future<void> addFirstPost(index) async {
     ImagePoster poster = _rotatedPosters.last;
+
     setState(() {
       _rotatedPosters.removeAt(_rotatedPosters.length - 1);
       _imagePosters.insert(0, poster);
