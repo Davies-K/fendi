@@ -10,15 +10,33 @@ class HomeDesktopView extends StatefulWidget {
   _HomeDesktopViewState createState() => _HomeDesktopViewState();
 }
 
-class _HomeDesktopViewState extends State<HomeDesktopView> {
+class _HomeDesktopViewState extends State<HomeDesktopView>
+    with SingleTickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
+  late AnimationController _controller;
+
+  bool _showPreviousIcon = false;
+  bool _showLastIcon = true;
 
   List<ImagePoster> _imagePosters = [];
+  List<ImagePoster> _rotatedPosters = [];
+  int _totalNumberOfImages = 0;
+  int _currentIndex = 0;
+
   double _width = Get.width * 0.20;
 
   @override
   void initState() {
     initializeImages();
+    setState(() {
+      _totalNumberOfImages = initializeImages().length;
+    });
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 700),
+      vsync: this,
+    );
+
     // TODO: implement initState
     super.initState();
   }
@@ -84,20 +102,27 @@ class _HomeDesktopViewState extends State<HomeDesktopView> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              IconButton(
-                                  onPressed: () {
-                                    print('tapped');
-                                    deleteFirstPost(0);
-                                  },
-                                  icon: Icon(Icons.west)),
+                              _showPreviousIcon
+                                  ? IconButton(
+                                      onPressed: () {
+                                        print('tapped');
+                                        addFirstPost(0);
+                                      },
+                                      icon: Icon(Icons.west))
+                                  : Icon(Icons.west, color: Colors.grey[300]),
                               SizedBox(width: 10),
-                              Text(' 16/50 ', style: GoogleFonts.lato()),
+                              Text(' ${_currentIndex}/$_totalNumberOfImages ',
+                                  style: GoogleFonts.lato()),
                               SizedBox(width: 10),
-                              IconButton(
-                                  onPressed: () {
-                                    _scrollToIndex(2);
-                                  },
-                                  icon: Icon(Icons.east))
+                              _showLastIcon
+                                  ? IconButton(
+                                      onPressed: () {
+                                        _playAnimation();
+                                        //_scrollToIndex(2);
+                                        deleteFirstPost(0);
+                                      },
+                                      icon: Icon(Icons.east))
+                                  : Icon(Icons.east, color: Colors.grey[300])
                             ],
                           ),
                         ))
@@ -158,34 +183,13 @@ class _HomeDesktopViewState extends State<HomeDesktopView> {
                       Container(
                           width: MediaQuery.of(context).size.width * 0.4,
                           child: Center(
-                            child: Stack(children: [
-                              Transform.rotate(
-                                angle: math.pi / 50,
-                                child: ClipRRect(
-                                  child: Image(
-                                    image: NetworkImage(
-                                        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg"),
-                                    width: MediaQuery.of(context).size.width *
-                                        0.13,
-                                    height: 300,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Transform.rotate(
-                                angle: -math.pi / 50,
-                                child: ClipRRect(
-                                  child: Image(
-                                    image: NetworkImage(
-                                        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg"),
-                                    width: MediaQuery.of(context).size.width *
-                                        0.13,
-                                    height: 300,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ]),
+                            child: Stack(
+                              children: [
+                                for (MapEntry entry
+                                    in _rotatedPosters.asMap().entries)
+                                  rotatedImageDisplay(entry.key, entry.value)
+                              ],
+                            ),
                           )),
 
                       //right middle container
@@ -202,14 +206,42 @@ class _HomeDesktopViewState extends State<HomeDesktopView> {
   }
 
   // Define the function that scroll to an item
-  void _scrollToIndex(index) {
+  Future<void> _scrollToIndex(index) async {
     _scrollController.animateTo(_width * index,
         duration: Duration(milliseconds: 400), curve: Curves.easeIn);
   }
 
-  void deleteFirstPost(index) {
+  Future<void> deleteFirstPost(index) async {
+    int lastRotatedIndex;
+    _rotatedPosters.length < 1
+        ? (lastRotatedIndex = 0)
+        : (lastRotatedIndex = _rotatedPosters.length);
+    ImagePoster poster = _imagePosters.first;
     setState(() {
       _imagePosters.removeAt(index);
+      _rotatedPosters.insert(lastRotatedIndex, poster);
+      _rotatedPosters.length > 0
+          ? (_showPreviousIcon = true)
+          : (_showPreviousIcon = false);
+      _imagePosters.length > 0
+          ? (_showLastIcon = true)
+          : (_showLastIcon = false);
+      _currentIndex += 1;
+    });
+  }
+
+  Future<void> addFirstPost(index) async {
+    ImagePoster poster = _rotatedPosters.last;
+    setState(() {
+      _rotatedPosters.removeAt(_rotatedPosters.length - 1);
+      _imagePosters.insert(0, poster);
+      _rotatedPosters.length > 0
+          ? (_showPreviousIcon = true)
+          : (_showPreviousIcon = false);
+      _imagePosters.length > 0
+          ? (_showLastIcon = true)
+          : (_showLastIcon = false);
+      _currentIndex -= 1;
     });
   }
 
@@ -240,6 +272,31 @@ class _HomeDesktopViewState extends State<HomeDesktopView> {
         image: NetworkImage(poster.imagePath),
         width: MediaQuery.of(context).size.width * 0.20,
         fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Future<void> _playAnimation() async {
+    try {
+      await _controller.forward().orCancel;
+    } on TickerCanceled {
+      // the animation got canceled, probably because it was disposed of
+    }
+  }
+
+  Widget rotatedImageDisplay(int index, ImagePoster poster) {
+    return FadeTransition(
+      opacity: _controller,
+      child: Transform.rotate(
+        angle: ((index == 0) || index % 2 == 0) ? math.pi / 50 : -math.pi / 50,
+        child: ClipRRect(
+          child: Image(
+            image: NetworkImage(poster.imagePath),
+            width: MediaQuery.of(context).size.width * 0.13,
+            height: 300,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
