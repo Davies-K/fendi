@@ -28,99 +28,93 @@ class _HomeMobileViewState extends State<HomeMobileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height,
-        child: Row(children: [
-          //left side of phone
-          Expanded(
-              flex: 1,
-              child: Stack(children: [
-                Positioned(
-                    bottom: 0,
-                    child: Container(
-                        height: MediaQuery.of(context).size.height * 0.5,
-                        //width: double.infinity,
-                        color: HexColor(backgroundColor),
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: 30, bottom: 30, right: 30, left: 20),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Text("0/50",
-                                        style: GoogleFonts.lato(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold))),
-                                Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                            width: 1, color: Colors.white)),
-                                    child: Center(
-                                      child: Icon(Icons.more_vert,
-                                          color: Colors.white),
-                                    ))
-                              ]),
-                        )))
-              ])),
+    return Flex(direction: Axis.horizontal, children: [
+      //left side of phone
+      Expanded(
+        flex: 1,
+        child: Stack(children: [
+          Positioned(
+              bottom: 0,
+              child: Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  //width: double.infinity,
+                  color: HexColor(backgroundColor),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: 30, bottom: 30, right: 30, left: 20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RotatedBox(
+                              quarterTurns: 3,
+                              child: Text("0/50",
+                                  style: GoogleFonts.lato(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold))),
+                          Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      width: 1, color: Colors.white)),
+                              child: Center(
+                                child:
+                                    Icon(Icons.more_vert, color: Colors.white),
+                              ))
+                        ]),
+                  ))),
+          Container(height: MediaQuery.of(context).size.height, child: Center())
+        ]),
+      ),
 
-          //Right Side
-          Expanded(
-              flex: 4,
-              child: Stack(children: [
-                SingleChildScrollView(
-                  child: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: Expanded(
-                          child: ListView(
-                              padding: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.20),
-                              scrollDirection: Axis.vertical,
-                              children: _imagePosters.map((ImagePoster item) {
-                                return singeImageDisplay(item);
-                              }).toList()))),
-                ),
-                Positioned(
-                    top: 50,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.750,
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //Right Side
+      Expanded(
+        flex: 4,
+        child: Stack(children: [
+          Container(
+              height: MediaQuery.of(context).size.height,
+              // width: MediaQuery.of(context).size.width,
+              child: ListView(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.20),
+                  scrollDirection: Axis.vertical,
+                  children: _imagePosters.map((ImagePoster item) {
+                    return singeImageDisplay(item);
+                  }).toList())),
+          Positioned(
+              top: 50,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.750,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Icon(Icons.home, color: Colors.transparent),
+                      Column(crossAxisAlignment: CrossAxisAlignment.center,
+                          // mainAxisAlignment:
+                          //     MainAxisAlignment.spaceAround,
                           children: [
-                            Icon(Icons.home, color: Colors.transparent),
-                            Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                // mainAxisAlignment:
-                                //     MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text('FENDI',
-                                      style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold)),
-                                  Text('ROMA',
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600)),
-                                ]),
-                            IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  CupertinoIcons.arrow_down_to_line,
-                                  size: 30,
-                                  color: Colors.black,
-                                ))
+                            Text('FENDI',
+                                style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold)),
+                            Text('ROMA',
+                                style: TextStyle(
+                                    fontSize: 10, fontWeight: FontWeight.w600)),
                           ]),
-                    ))
-              ]))
-        ]));
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            CupertinoIcons.arrow_down_to_line,
+                            size: 30,
+                            color: Colors.black,
+                          ))
+                    ]),
+              ))
+        ]),
+      )
+    ]);
   }
 
   Widget singeImageDisplay(ImagePoster poster) {
