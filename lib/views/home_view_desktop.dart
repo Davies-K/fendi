@@ -48,12 +48,12 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     });
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
       vsync: this,
     );
 
     _animController = AnimationController(
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 40),
       vsync: this,
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
