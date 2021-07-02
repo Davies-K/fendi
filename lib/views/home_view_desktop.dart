@@ -48,7 +48,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     });
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 100),
       vsync: this,
     );
 
