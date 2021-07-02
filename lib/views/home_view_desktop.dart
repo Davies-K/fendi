@@ -11,13 +11,18 @@ class HomeDesktopView extends StatefulWidget {
 }
 
 class _HomeDesktopViewState extends State<HomeDesktopView>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   ScrollController _scrollController = new ScrollController();
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   late AnimationController _controller;
 
+  late AnimationController _animController;
+  late Animation<Offset> _animation;
+
   bool _showPreviousIcon = false;
   bool _showLastIcon = true;
+
+  String backgroundColor = "#e8e6e0";
 
   List<ImagePoster> _imagePosters = [];
   List<ImagePoster> _rotatedPosters = [];
@@ -43,9 +48,28 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     });
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 100),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+
+    _animController = AnimationController(
+      duration: const Duration(seconds: 20),
+      vsync: this,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animController.reset();
+        } else if (status == AnimationStatus.dismissed) {
+          _animController.forward();
+        }
+      });
+    _animController.forward();
+    _animation = Tween<Offset>(
+      begin: const Offset(0, -1.0),
+      end: const Offset(0, 1.4),
+    ).animate(CurvedAnimation(
+      parent: _animController,
+      curve: Curves.linear,
+    ));
 
     // TODO: implement initState
     super.initState();
@@ -65,26 +89,33 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SlideInDown(
-                          from: 450,
-
-                          duration: Duration(milliseconds: 6600),
-                          //infinite: true,
-                          child: Container(
-                            height: double.infinity,
-                            //width: 150,
-                            child: RotatedBox(
-                                quarterTurns: 3,
-                                child: Center(
-                                    child: Text("2021 Woman Spring",
+                        SlideTransition(
+                          transformHitTests: true,
+                          textDirection: TextDirection.ltr,
+                          position: _animation,
+                          child: RotatedBox(
+                              quarterTurns: 3,
+                              child: Container(
+                                width: double.infinity,
+                                child: Row(
+                                  children: [
+                                    Text("2021 Woman Spring",
                                         textAlign: TextAlign.center,
-                                        //overflow: TextOverflow.ellipsis,
                                         style: GoogleFonts.lato(
                                             color: Color.fromRGBO(
-                                                154, 116, 84, 0.6),
+                                                154, 116, 84, 0.5),
                                             fontSize: 100,
-                                            fontWeight: FontWeight.w500)))),
-                          ),
+                                            fontWeight: FontWeight.w300)),
+                                    Text("/Summer Wear",
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.lato(
+                                            color: Color.fromRGBO(
+                                                154, 116, 84, 0.5),
+                                            fontSize: 100,
+                                            fontWeight: FontWeight.w300)),
+                                  ],
+                                ),
+                              )),
                         ),
                         SizedBox(width: 200)
                       ],
@@ -105,7 +136,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       fontWeight: FontWeight.w600)),
                             ])),
                     Positioned(
-                        bottom: 200,
+                        bottom: 150,
                         right: 20,
                         child: Container(
                           width: 150,
@@ -115,16 +146,13 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                               _showPreviousIcon
                                   ? IconButton(
                                       onPressed: () {
-                                        print('tapped');
-                                        ImagePoster poster =
-                                            _rotatedPosters.last;
+                                        addFirstPost(0);
+
                                         listKey.currentState!.insertItem(0,
                                             duration: const Duration(
-                                                milliseconds: 550));
+                                                milliseconds: 350));
 
                                         // _imagePosters.add(poster);
-
-                                        addFirstPost(0);
                                       },
                                       icon: Icon(Icons.west))
                                   : Icon(Icons.west, color: Colors.grey[300]),
@@ -135,15 +163,15 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                               _showLastIcon
                                   ? IconButton(
                                       onPressed: () {
-                                        _playAnimation();
+                                        deleteFirstPost(0);
+                                        //_playAnimation();
                                         listKey.currentState!.removeItem(
                                             0,
                                             (_, animation) =>
                                                 slideIt(context, 0, animation),
                                             duration: const Duration(
-                                                milliseconds: 550));
+                                                milliseconds: 350));
                                         //_scrollToIndex(2);
-                                        deleteFirstPost(0);
                                       },
                                       icon: Icon(Icons.east))
                                   : Icon(Icons.east, color: Colors.grey[300])
@@ -155,7 +183,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
         Expanded(
             flex: 1,
             child: Container(
-                color: AppColors.primaryColor,
+                color: HexColor(backgroundColor),
                 child: Stack(children: [
                   Positioned(
                       top: 20,
@@ -171,7 +199,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                 fontWeight: FontWeight.w600)),
                       ])),
                   Positioned(
-                      bottom: 200,
+                      bottom: 150,
                       right: 0,
                       child: Container(
                         //width: 150,
@@ -199,7 +227,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           height: MediaQuery.of(context).size.height,
           child: Center(
               child: Container(
-                  height: 400,
+                  height: 500,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.transparent,
                   child: Row(
@@ -237,6 +265,12 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     ]);
   }
 
+  changeBackgroundColor(String color) {
+    setState(() {
+      backgroundColor = color;
+    });
+  }
+
   Widget slideIt(BuildContext context, int index, animation) {
     ImagePoster item = _imagePosters[index];
 
@@ -246,7 +280,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
         scale: animation,
         child: SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(-40, 0),
+              begin: const Offset(-40, -5),
               end: Offset(0, 0),
             ).animate(CurvedAnimation(
               parent: animation,
@@ -261,7 +295,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   // Define the function that scroll to an item
   Future<void> _scrollToIndex(index) async {
     _scrollController.animateTo(_width * index,
-        duration: Duration(milliseconds: 600), curve: Curves.easeIn);
+        duration: Duration(milliseconds: 200), curve: Curves.easeInCirc);
   }
 
   Future<void> deleteFirstPost(index) async {
@@ -286,6 +320,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           : (_showLastIcon = false);
       _currentIndex += 1;
     });
+    changeBackgroundColor(_imagePosters[0].backgroundColor);
   }
 
   Future<void> addFirstPost(index) async {
@@ -302,26 +337,45 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           : (_showLastIcon = false);
       _currentIndex -= 1;
     });
+    changeBackgroundColor(_imagePosters[0].backgroundColor);
   }
 
   List<ImagePoster> initializeImages() {
     _imagePosters = [];
     _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/236a07f777d662b78b9c23337194ff36.jpg",
-        "red"));
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/833f7d2172b444c7d052c2527c320e3b.jpg",
+        "#9d403f"));
     _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/a0bd071d00d0d68e4ce497d21af2e462.jpg",
-        "red"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg",
-        "red"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2677bf655081c90cfa01a60b52f91399.jpg",
-        "red"));
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/1962c4a774c5e7f95d887840e2f4d020.jpg",
+        "#a32c38"));
 
     _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/c296a19d32371554094925b67c14c68b.jpg",
+        "#44332e"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/768a680271498dbb305430e936b639bd.jpg",
+        "#865f51"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2788088d04658a98e4c6c7e4a3a3c730.jpg",
+        "#442927"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg",
+        "#e8e6e0"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/a0bd071d00d0d68e4ce497d21af2e462.jpg",
+        "#e9e4de"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/236a07f777d662b78b9c23337194ff36.jpg",
+        "#b5a192"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2677bf655081c90cfa01a60b52f91399.jpg",
+        "#845f52"));
+    _imagePosters.add(new ImagePoster(
         "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/306e07a7380a27fe09cc63c3c304bc9a.jpg",
-        "red"));
+        "#ac845d"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/e7d8ace0086eff70371504526f933827.jpg",
+        "#a67c52"));
     return _imagePosters;
   }
 
@@ -351,8 +405,8 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
         child: ClipRRect(
           child: Image(
             image: NetworkImage(poster.imagePath),
-            width: MediaQuery.of(context).size.width * 0.13,
-            height: 300,
+            width: MediaQuery.of(context).size.width * 0.15,
+            height: 400,
             fit: BoxFit.cover,
           ),
         ),
@@ -366,4 +420,16 @@ class ImagePoster {
   final String backgroundColor;
 
   ImagePoster(this.imagePath, this.backgroundColor);
+}
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
