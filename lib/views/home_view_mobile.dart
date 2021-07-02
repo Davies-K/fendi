@@ -4,6 +4,7 @@ import 'package:fendi/constants/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class HomeMobileView extends StatefulWidget {
   @override
@@ -101,7 +102,8 @@ class _HomeMobileViewState extends State<HomeMobileView>
                         children: [
                           RotatedBox(
                               quarterTurns: 3,
-                              child: Text("0/50",
+                              child: Text(
+                                  "${_currentIndex + 1}/${_totalNumberOfImages}",
                                   style: GoogleFonts.lato(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -133,9 +135,15 @@ class _HomeMobileViewState extends State<HomeMobileView>
                   padding: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.20),
                   scrollDirection: Axis.vertical,
-                  children: _imagePosters.map((ImagePoster item) {
-                    return singeImageDisplay(item);
-                  }).toList())),
+                  children: [
+                    for (MapEntry entry in _imagePosters.asMap().entries)
+                      singeImageDisplay(entry.key, entry.value)
+                  ]
+                  // children: _imagePosters.map((key, ImagePoster item) {
+                  //   return singeImageDisplay(key, item);
+                  // }).toList()
+
+                  )),
           Positioned(
               top: 50,
               child: Container(
@@ -169,13 +177,23 @@ class _HomeMobileViewState extends State<HomeMobileView>
     ]);
   }
 
-  Widget singeImageDisplay(ImagePoster poster) {
-    return ClipRRect(
-      child: Image(
-        image: NetworkImage(poster.imagePath),
-        width: MediaQuery.of(context).size.width * 0.80,
-        height: 500,
-        fit: BoxFit.cover,
+  Widget singeImageDisplay(key, ImagePoster poster) {
+    return VisibilityDetector(
+      key: Key(key.toString()),
+      onVisibilityChanged: (VisibilityInfo info) {
+        if (info.visibleFraction == 1)
+          setState(() {
+            _currentIndex = key;
+            print(_currentIndex);
+          });
+      },
+      child: ClipRRect(
+        child: Image(
+          image: NetworkImage(poster.imagePath),
+          width: MediaQuery.of(context).size.width * 0.80,
+          height: 500,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
