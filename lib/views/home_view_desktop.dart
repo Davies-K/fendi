@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:fendi/constants/Classes/image_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,8 +22,6 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
 
   bool _showPreviousIcon = false;
   bool _showLastIcon = true;
-
-  String backgroundColor = "#576d8c";
 
   List<ImagePoster> _imagePosters = [];
   List<ImagePoster> _rotatedPosters = [];
@@ -414,13 +413,6 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
       ),
     );
   }
-}
-
-class ImagePoster {
-  final String imagePath;
-  final String backgroundColor;
-
-  ImagePoster(this.imagePath, this.backgroundColor);
 }
 
 class HexColor extends Color {
