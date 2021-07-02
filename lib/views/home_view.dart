@@ -12,7 +12,7 @@ class HomeView extends StatelessWidget {
       return Scaffold(
           body: ScreenTypeLayout(
               mobile: HomeMobileView(),
-              //tablet: HomeTabletView(),
+              tablet: HomeDesktopView(),
               desktop: HomeDesktopView()));
     });
   }

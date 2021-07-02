@@ -10,10 +10,14 @@ class HomeMobileView extends StatefulWidget {
   _HomeMobileViewState createState() => _HomeMobileViewState();
 }
 
-class _HomeMobileViewState extends State<HomeMobileView> {
+class _HomeMobileViewState extends State<HomeMobileView>
+    with SingleTickerProviderStateMixin {
   int _totalNumberOfImages = 0;
   int _currentIndex = 0;
   List<ImagePoster> _imagePosters = [];
+
+  late AnimationController _animController;
+  late Animation<Offset> _animation;
 
   @override
   void initState() {
@@ -23,6 +27,25 @@ class _HomeMobileViewState extends State<HomeMobileView> {
       _totalNumberOfImages = initializeImages().length;
       //backgroundColor = _imagePosters[0].backgroundColor;
     });
+
+    _animController = AnimationController(
+      duration: const Duration(seconds: 40),
+      vsync: this,
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animController.reset();
+        } else if (status == AnimationStatus.dismissed) {
+          _animController.forward();
+        }
+      });
+    _animController.forward();
+    _animation = Tween<Offset>(
+      begin: const Offset(0, -1.0),
+      end: const Offset(0, 1.4),
+    ).animate(CurvedAnimation(
+      parent: _animController,
+      curve: Curves.linear,
+    ));
     super.initState();
   }
 
@@ -33,6 +56,36 @@ class _HomeMobileViewState extends State<HomeMobileView> {
       Expanded(
         flex: 1,
         child: Stack(children: [
+          Container(
+              height: MediaQuery.of(context).size.height,
+              child: Center(
+                child: SlideTransition(
+                  transformHitTests: true,
+                  textDirection: TextDirection.ltr,
+                  position: _animation,
+                  child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Container(
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            Text("2021 Woman Spring",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(154, 116, 84, 0.5),
+                                    fontSize: 70,
+                                    fontWeight: FontWeight.w300)),
+                            Text("/Summer",
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                    color: Color.fromRGBO(154, 116, 84, 0.5),
+                                    fontSize: 70,
+                                    fontWeight: FontWeight.w300)),
+                          ],
+                        ),
+                      )),
+                ),
+              )),
           Positioned(
               bottom: 0,
               child: Container(
@@ -66,7 +119,6 @@ class _HomeMobileViewState extends State<HomeMobileView> {
                               ))
                         ]),
                   ))),
-          Container(height: MediaQuery.of(context).size.height, child: Center())
         ]),
       ),
 
