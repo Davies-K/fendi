@@ -11,23 +11,23 @@ body {
   }
   .container {
     margin: 100px auto;
-    width: 500px;
+    width: 300px;
     text-align: center;
   }
   .bar-container {
     background: #f0f0f0;
-    height: 8px;
+    height: 5px;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 2px;
   }
   .progress {
-    padding: 6px;
+    padding: 1px;
     background: rgba(0, 0, 0, 0.25);
-    border-radius: 6px;
+    border-radius: 2px;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
 }
 .progress-bar {
-    height: 18px;
+    height: 14px;
     background-color: #ee303c;
     border-radius: 4px;
     transition: 0.4s linear;
