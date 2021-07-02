@@ -27,8 +27,22 @@
 
   <title>fendi</title>
   <link rel="manifest" href="manifest.json">
+
+  <link rel="stylesheet" type="text/css" href="loading-styles.css">
+  <script type="text/javascript" src="loading.js"></script>
 </head>
 <body>
+ 
+
+<!-- Container -->
+<div class="container">
+  <div class="progress progress-striped">
+    <div class="progress-bar">
+    </div>                       
+  </div> 
+ <div>
+<!-- End Of Container -->
+
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
@@ -96,5 +110,6 @@
       loadMainDartJs();
     }
   </script>
+  
 </body>
 </html>

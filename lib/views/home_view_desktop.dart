@@ -22,7 +22,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   bool _showPreviousIcon = false;
   bool _showLastIcon = true;
 
-  String backgroundColor = "#e8e6e0";
+  String backgroundColor = "#576d8c";
 
   List<ImagePoster> _imagePosters = [];
   List<ImagePoster> _rotatedPosters = [];
@@ -45,6 +45,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     initializeImages();
     setState(() {
       _totalNumberOfImages = initializeImages().length;
+      //backgroundColor = _imagePosters[0].backgroundColor;
     });
 
     _controller = AnimationController(
