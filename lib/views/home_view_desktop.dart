@@ -1,4 +1,3 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:fendi/constants/Classes/image_poster.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -148,10 +147,6 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       onPressed: () {
                                         addFirstPost(0);
 
-                                        listKey.currentState!.insertItem(0,
-                                            duration: const Duration(
-                                                milliseconds: 350));
-
                                         // _imagePosters.add(poster);
                                       },
                                       icon: Icon(Icons.west))
@@ -165,12 +160,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       onPressed: () {
                                         deleteFirstPost(0);
                                         //_playAnimation();
-                                        listKey.currentState!.removeItem(
-                                            0,
-                                            (_, animation) =>
-                                                slideIt(context, 0, animation),
-                                            duration: const Duration(
-                                                milliseconds: 350));
+
                                         //_scrollToIndex(2);
                                       },
                                       icon: Icon(Icons.east))
@@ -182,7 +172,8 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                 ))),
         Expanded(
             flex: 1,
-            child: Container(
+            child: AnimatedContainer(
+                duration: Duration(milliseconds: 200),
                 color: HexColor(backgroundColor),
                 child: Stack(children: [
                   Positioned(
@@ -255,6 +246,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                       Expanded(
                           child: AnimatedList(
                               scrollDirection: Axis.horizontal,
+                              controller: _scrollController,
                               key: listKey,
                               initialItemCount: _totalNumberOfImages,
                               itemBuilder: (context, index, animation) {
@@ -274,18 +266,18 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   Widget slideIt(BuildContext context, int index, animation) {
     ImagePoster item = _imagePosters[index];
 
-    return FadeTransition(
-      opacity: animation,
-      child: ScaleTransition(
-        scale: animation,
+    return ScaleTransition(
+      scale: animation,
+      child: FadeTransition(
+        opacity: animation,
         child: SlideTransition(
             position: Tween<Offset>(
               begin: const Offset(-40, -5),
               end: Offset(0, 0),
             ).animate(CurvedAnimation(
               parent: animation,
-              curve: Curves.easeOutCirc,
-              reverseCurve: Curves.easeOutCirc,
+              curve: Curves.decelerate,
+              reverseCurve: Curves.decelerate,
             )),
             child: singeImageDisplay(item)),
       ),
@@ -293,24 +285,28 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   }
 
   // Define the function that scroll to an item
-  Future<void> _scrollToIndex(index) async {
-    _scrollController.animateTo(_width * index,
-        duration: Duration(milliseconds: 200), curve: Curves.easeInCirc);
+  _scrollToIndex(index) {
+    _scrollController.animateTo(_width * (index),
+        duration: Duration(milliseconds: 600), curve: Curves.fastOutSlowIn);
   }
 
   Future<void> deleteFirstPost(index) async {
+    _scrollToIndex(20);
+
+    listKey.currentState!.removeItem(
+        0, (_, animation) => slideIt(context, 0, animation),
+        duration: const Duration(milliseconds: 1000));
     int lastRotatedIndex;
     _rotatedPosters.length < 1
         ? (lastRotatedIndex = 0)
         : (lastRotatedIndex = _rotatedPosters.length);
     ImagePoster poster = _imagePosters.first;
-
+    _imagePosters.removeAt(index);
     //reset animation
     _controller.reset();
     _controller.forward();
 
     setState(() {
-      _imagePosters.removeAt(index);
       _rotatedPosters.insert(lastRotatedIndex, poster);
       _rotatedPosters.length > 0
           ? (_showPreviousIcon = true)
@@ -319,13 +315,17 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           ? (_showLastIcon = true)
           : (_showLastIcon = false);
       _currentIndex += 1;
+      //_scrollToIndex(0);
     });
+
     changeBackgroundColor(_imagePosters[0].backgroundColor);
+    //_scrollToIndex(0);
   }
 
   Future<void> addFirstPost(index) async {
     ImagePoster poster = _rotatedPosters.last;
-
+    listKey.currentState!
+        .insertItem(0, duration: const Duration(milliseconds: 500));
     setState(() {
       _rotatedPosters.removeAt(_rotatedPosters.length - 1);
       _imagePosters.insert(0, poster);
@@ -370,9 +370,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
     _imagePosters.add(new ImagePoster(
         "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2677bf655081c90cfa01a60b52f91399.jpg",
         "#845f52"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/306e07a7380a27fe09cc63c3c304bc9a.jpg",
-        "#ac845d"));
+
     _imagePosters.add(new ImagePoster(
         "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/e7d8ace0086eff70371504526f933827.jpg",
         "#a67c52"));
@@ -398,17 +396,14 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   }
 
   Widget rotatedImageDisplay(int index, ImagePoster poster) {
-    return FadeTransition(
-      opacity: _controller,
-      child: Transform.rotate(
-        angle: ((index == 0) || index % 2 == 0) ? math.pi / 50 : -math.pi / 50,
-        child: ClipRRect(
-          child: Image(
-            image: NetworkImage(poster.imagePath),
-            width: MediaQuery.of(context).size.width * 0.15,
-            height: 400,
-            fit: BoxFit.cover,
-          ),
+    return Transform.rotate(
+      angle: ((index == 0) || index % 2 == 0) ? math.pi / 50 : -math.pi / 50,
+      child: ClipRRect(
+        child: Image(
+          image: NetworkImage(poster.imagePath),
+          width: MediaQuery.of(context).size.width * 0.15,
+          height: 400,
+          fit: BoxFit.cover,
         ),
       ),
     );
