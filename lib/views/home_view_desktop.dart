@@ -285,13 +285,25 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   }
 
   // Define the function that scroll to an item
+  _scrollToFirstIndex() {
+    _scrollController.jumpTo(
+      0,
+    );
+  }
+
   _scrollToIndex(index) {
-    _scrollController.animateTo(_width * (index),
-        duration: Duration(milliseconds: 600), curve: Curves.fastOutSlowIn);
+    _scrollController
+        .animateTo((_width) * (index),
+            duration: Duration(milliseconds: 1000), curve: Curves.fastOutSlowIn)
+        .then((value) => Future.delayed(const Duration(milliseconds: 0), () {
+              _scrollToFirstIndex();
+            }));
   }
 
   Future<void> deleteFirstPost(index) async {
-    _scrollToIndex(1);
+    Future.delayed(const Duration(milliseconds: 0), () {
+      _scrollToIndex(1);
+    });
 
     listKey.currentState!.removeItem(
         0, (_, animation) => slideIt(context, 0, animation),
