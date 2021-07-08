@@ -272,7 +272,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
         opacity: animation,
         child: SlideTransition(
             position: Tween<Offset>(
-              begin: const Offset(-40, -5),
+              begin: const Offset(-40, 0),
               end: Offset(0, 0),
             ).animate(CurvedAnimation(
               parent: animation,
@@ -291,7 +291,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   }
 
   Future<void> deleteFirstPost(index) async {
-    _scrollToIndex(20);
+    _scrollToIndex(1);
 
     listKey.currentState!.removeItem(
         0, (_, animation) => slideIt(context, 0, animation),

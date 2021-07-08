@@ -10,20 +10,28 @@ class AdamDesktopView extends StatefulWidget {
   _AdamDesktopViewState createState() => _AdamDesktopViewState();
 }
 
-class _AdamDesktopViewState extends State<AdamDesktopView> {
+class _AdamDesktopViewState extends State<AdamDesktopView>
+    with TickerProviderStateMixin {
   List<ImagePoster> _imagePosters = [];
-  bool _nexthovering = false;
-
-  void _mouseEnter(bool hover) {
-    setState(() {
-      _nexthovering = hover;
-    });
-  }
+  late AnimationController _controller;
+  late Animation<Offset> _animation;
 
   @override
   void initState() {
     initializeImages();
     // TODO: implement initState
+    _controller = AnimationController(
+      duration: const Duration(seconds: 3),
+      vsync: this,
+    )..forward();
+    _animation = Tween<Offset>(
+      begin: const Offset(-0.5, 0.0),
+      end: const Offset(0.5, 0.0),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInCubic,
+    ));
+
     super.initState();
   }
 
@@ -99,54 +107,31 @@ class _AdamDesktopViewState extends State<AdamDesktopView> {
 
                         //stacked Cards
                         Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
+                            width: MediaQuery.of(context).size.width * 0.8,
                             //height: 400,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 500),
-                                  transitionBuilder: (Widget child,
-                                      Animation<double> animation) {
-                                    return ScaleTransition(
-                                        child: child, scale: animation);
-                                  },
-                                  child: Text(
-                                    '$_count',
-                                    // This key causes the AnimatedSwitcher to interpret this as a "new"
-                                    // child each time the count changes, so that it will begin its animation
-                                    // when the count changes.
-                                    key: ValueKey<int>(_count),
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                ),
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  //height: 400,
-                                  child: Center(
-                                    child: Stack(
-                                      children: [
-                                        for (MapEntry entry
-                                            in _imagePosters.asMap().entries)
-                                          rotatedImageDisplay(
-                                              entry.key, entry.value)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              //height: 400,
+                              child: Center(
+                                child: Stack(
                                   children: [
-                                    Icon(Icons.horizontal_rule,
-                                        color: Colors.white),
-                                    Text("NEXT",
-                                        style: TextStyle(color: Colors.white)),
+                                    AnimatedList(
+                                        scrollDirection: Axis.horizontal,
+                                        //controller: _scrollController,
+                                        //key: listKey,
+                                        initialItemCount: 8,
+                                        itemBuilder:
+                                            (context, index, animation) {
+                                          return slideIt(
+                                              context, index, animation);
+                                        })
+                                    // for (MapEntry entry
+                                    //     in _imagePosters.asMap().entries)
+                                    //   rotatedImageDisplay(
+                                    //       entry.key, entry.value)
                                   ],
                                 ),
-                              ],
+                              ),
                             )),
 
                         RotatedBox(
@@ -187,28 +172,16 @@ class _AdamDesktopViewState extends State<AdamDesktopView> {
   }
 
   Widget rotatedImageDisplay(int index, ImagePoster poster) {
-    return GestureDetector(
-      key: ValueKey<int>(index),
-      onTap: () {
-        // _imagePosters.removeAt(4);
-        // setState(() {
-        //   _imagePosters;
-        // });
-      },
-      child: AnimatedPositioned(
-        duration: Duration(milliseconds: 500),
-        child: Transform.rotate(
-          angle: ((index == 0) || index % 2 == 0)
-              ? (math.pi - (5 * index)) / 80
-              : (-math.pi + (5 * index)) / 80,
-          child: ClipRRect(
-            child: Image(
-              image: NetworkImage(poster.imagePath),
-              width: MediaQuery.of(context).size.width * 0.15,
-              height: 400,
-              fit: BoxFit.cover,
-            ),
-          ),
+    return Transform.rotate(
+      angle: ((index == 0) || index % 2 == 0)
+          ? (math.pi - (5 * index)) / 80
+          : (-math.pi + (5 * index)) / 80,
+      child: ClipRRect(
+        child: Image(
+          image: NetworkImage(poster.imagePath),
+          width: MediaQuery.of(context).size.width * 0.15,
+          height: 350,
+          fit: BoxFit.cover,
         ),
       ),
     );
@@ -233,7 +206,38 @@ class _AdamDesktopViewState extends State<AdamDesktopView> {
         "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2788088d04658a98e4c6c7e4a3a3c730.jpg",
         "#442927"));
 
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/c296a19d32371554094925b67c14c68b.jpg",
+        "#44332e"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/768a680271498dbb305430e936b639bd.jpg",
+        "#865f51"));
+    _imagePosters.add(new ImagePoster(
+        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2788088d04658a98e4c6c7e4a3a3c730.jpg",
+        "#442927"));
+
     return _imagePosters;
+  }
+
+  Widget slideIt(BuildContext context, int index, animation) {
+    ImagePoster item = _imagePosters[index];
+
+    return ScaleTransition(
+      scale: animation,
+      child: FadeTransition(
+        opacity: animation,
+        child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-40, 0),
+              end: Offset(0, 0),
+            ).animate(CurvedAnimation(
+              parent: animation,
+              curve: Curves.decelerate,
+              reverseCurve: Curves.decelerate,
+            )),
+            child: rotatedImageDisplay(index, item)),
+      ),
+    );
   }
 }
 
