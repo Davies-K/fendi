@@ -1,3 +1,4 @@
+import 'package:fendi/Utils/utils.dart';
 import 'package:fendi/constants/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class BottomLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        bottom: 150,
+        bottom: Utils.screenHeight * 0.05,
         right: 0,
         child: Container(
           //width: 150,

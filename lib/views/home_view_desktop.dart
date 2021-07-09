@@ -1,4 +1,5 @@
 import 'package:fendi/Models/image-poster.dart';
+import 'package:fendi/Utils/utils.dart';
 import 'package:fendi/Widgets/bottom-link.dart';
 import 'package:fendi/Widgets/rotated-image-display.dart';
 import 'package:fendi/Widgets/single-image-display.dart';
@@ -101,7 +102,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       fontWeight: FontWeight.w600)),
                             ])),
                     Positioned(
-                        bottom: 150,
+                        bottom: Utils.screenHeight * 0.05,
                         right: 20,
                         child: Container(
                           width: 150,
@@ -145,7 +146,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           height: MediaQuery.of(context).size.height,
           child: Center(
               child: Container(
-                  height: 500,
+                  height: Utils.screenHeight * 0.38,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.transparent,
                   child: Row(
