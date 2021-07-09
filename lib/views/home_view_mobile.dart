@@ -1,4 +1,6 @@
 import 'package:fendi/Models/image-poster.dart';
+import 'package:fendi/Utils/utils.dart';
+import 'package:fendi/Widgets/larger-image.dart';
 import 'package:fendi/constants/constants.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -92,7 +94,7 @@ class _HomeMobileViewState extends State<HomeMobileView>
               child: Container(
                   height: MediaQuery.of(context).size.height * 0.5,
                   //width: double.infinity,
-                  color: HexColor(backgroundColor),
+                  color: HexColor.fromHex(backgroundColor),
                   child: Padding(
                     padding: EdgeInsets.only(
                         top: 30, bottom: 30, right: 30, left: 20),
@@ -108,17 +110,22 @@ class _HomeMobileViewState extends State<HomeMobileView>
                                       color: Colors.white,
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold))),
-                          Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                      width: 1, color: Colors.white)),
-                              child: Center(
-                                child:
-                                    Icon(Icons.more_vert, color: Colors.white),
-                              ))
+                          InkWell(
+                            onTap: () {
+                              showDetailsBottomSheet();
+                            },
+                            child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        width: 1, color: Colors.white)),
+                                child: Center(
+                                  child: Icon(Icons.more_vert,
+                                      color: Colors.white),
+                                )),
+                          )
                         ]),
                   ))),
         ]),
@@ -145,7 +152,7 @@ class _HomeMobileViewState extends State<HomeMobileView>
 
                   )),
           Positioned(
-              top: 50,
+              top: 20,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.750,
                 child: Row(
@@ -187,12 +194,21 @@ class _HomeMobileViewState extends State<HomeMobileView>
             print(_currentIndex);
           });
       },
-      child: ClipRRect(
-        child: Image(
-          image: NetworkImage(poster.imagePath),
-          width: MediaQuery.of(context).size.width * 0.80,
-          height: 500,
-          fit: BoxFit.cover,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => DetailScreen(poster)));
+        },
+        child: MouseRegion(
+          cursor: SystemMouseCursors.zoomIn,
+          child: ClipRRect(
+            child: Image(
+              image: NetworkImage(poster.imagePath),
+              width: MediaQuery.of(context).size.width * 0.80,
+              height: 500,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
       ),
     );
@@ -200,52 +216,68 @@ class _HomeMobileViewState extends State<HomeMobileView>
 
   List<ImagePoster> initializeImages() {
     _imagePosters = [];
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/833f7d2172b444c7d052c2527c320e3b.jpg",
-        "#9d403f"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/1962c4a774c5e7f95d887840e2f4d020.jpg",
-        "#a32c38"));
+    _imagePosters.add(new ImagePoster(ImagePath.firstImage, "#9d403f"));
+    _imagePosters.add(new ImagePoster(ImagePath.secondImage, "#a32c38"));
 
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/c296a19d32371554094925b67c14c68b.jpg",
-        "#44332e"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/768a680271498dbb305430e936b639bd.jpg",
-        "#865f51"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2788088d04658a98e4c6c7e4a3a3c730.jpg",
-        "#442927"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/36ad587a3e530c02cd26936ac55c1def.jpg",
-        "#e8e6e0"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/a0bd071d00d0d68e4ce497d21af2e462.jpg",
-        "#e9e4de"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/236a07f777d662b78b9c23337194ff36.jpg",
-        "#b5a192"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/2677bf655081c90cfa01a60b52f91399.jpg",
-        "#845f52"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/306e07a7380a27fe09cc63c3c304bc9a.jpg",
-        "#ac845d"));
-    _imagePosters.add(new ImagePoster(
-        "https://images.www.fendi.com/static/digitallookbook/woman-spring-summer-2021/assets/listing/images/e7d8ace0086eff70371504526f933827.jpg",
-        "#a67c52"));
+    _imagePosters.add(new ImagePoster(ImagePath.thirdImage, "#44332e"));
+    _imagePosters.add(new ImagePoster(ImagePath.fourthImage, "#865f51"));
+    _imagePosters.add(new ImagePoster(ImagePath.fifthImage, "#442927"));
+    _imagePosters.add(new ImagePoster(ImagePath.sixthImage, "#e8e6e0"));
+    _imagePosters.add(new ImagePoster(ImagePath.seventhImage, "#e9e4de"));
+    _imagePosters.add(new ImagePoster(ImagePath.eigthImage, "#b5a192"));
+    _imagePosters.add(new ImagePoster(ImagePath.ninethImage, "#845f52"));
+
+    _imagePosters.add(new ImagePoster(ImagePath.tenthImage, "#a67c52"));
     return _imagePosters;
   }
-}
 
-class HexColor extends Color {
-  static int _getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
-    return int.parse(hexColor, radix: 16);
+  showDetailsBottomSheet() {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+            height: Utils.screenHeight,
+            decoration: new BoxDecoration(
+              color: AppColors.white,
+            ),
+            child: Column(children: [
+              SizedBox(
+                height: Utils.screenHeight * 0.05,
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.close, size: 25)),
+              ),
+              Flexible(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(AppPhrases.locator.replaceAll('|', '').toUpperCase(),
+                        style: AppStyles.headerTextStyle.copyWith(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600)),
+                    Text(
+                        AppPhrases.contactPhrase
+                            .replaceAll('|', '')
+                            .toUpperCase(),
+                        style: AppStyles.headerTextStyle.copyWith(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600)),
+                    Text(AppPhrases.appointment.toUpperCase(),
+                        style: AppStyles.headerTextStyle.copyWith(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              )
+            ])));
   }
-
-  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
