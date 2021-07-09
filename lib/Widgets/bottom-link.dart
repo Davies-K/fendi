@@ -6,7 +6,7 @@ class BottomLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-        bottom: Utils.screenHeight * 0.05,
+        bottom: Utils.screenHeight * 0.03,
         right: 0,
         child: Container(
           //width: 150,
