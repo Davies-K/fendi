@@ -1,4 +1,4 @@
-import 'package:fendi/constants/Classes/image_poster.dart';
+import 'package:fendi/Models/image-poster.dart';
 import 'package:fendi/constants/constants.dart';
 import 'package:flutter/material.dart';
 import "package:flutter_feather_icons/flutter_feather_icons.dart";

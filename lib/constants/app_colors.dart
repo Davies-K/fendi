@@ -1,16 +1,10 @@
 part of constants;
 
 class AppColors {
-  // final Color primaryColor = HexColor.fromHex('#351e8a');
-  // final Color secondaryColor = HexColor.fromHex('#3e2696');
-  // final Color accentColor = HexColor.fromHex('#ee9a2f');
-  // final Color accentColor2 = HexColor.fromHex('#ee9a2f');
-
   static const Color primaryColor = Color.fromRGBO(154, 116, 84, 1);
   static const Color secondaryColor = Colors.white;
   static const Color accentColor = Color.fromRGBO(238, 154, 47, 1);
   static const Color accentColor2 = Color.fromRGBO(166, 112, 97, 1);
-
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey = Color(0xFFD8D9DA);

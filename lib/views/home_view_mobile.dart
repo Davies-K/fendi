@@ -1,4 +1,4 @@
-import 'package:fendi/constants/Classes/image_poster.dart';
+import 'package:fendi/Models/image-poster.dart';
 import 'package:fendi/constants/constants.dart';
 
 import 'package:flutter/cupertino.dart';
