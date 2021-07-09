@@ -117,7 +117,8 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       icon: Icon(Icons.west))
                                   : Icon(Icons.west, color: Colors.grey[300]),
                               SizedBox(width: 10),
-                              Text(' ${_currentIndex}/$_totalNumberOfImages ',
+                              Text(
+                                  ' ${_currentIndex + 1}/$_totalNumberOfImages ',
                                   style: GoogleFonts.lato()),
                               SizedBox(width: 10),
                               _showLastIcon
@@ -219,31 +220,35 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
   }
 
   Future<void> deleteFirstPost(index) async {
-    Future.delayed(const Duration(milliseconds: 0), () {
-      _scrollToIndex(1);
-    });
+    if (_imagePosters.length > 1) {
+      Future.delayed(const Duration(milliseconds: 0), () {
+        _scrollToIndex(1);
+      });
 
-    listKey.currentState!.removeItem(
-        0, (_, animation) => slideImagePoster(context, 0, animation),
-        duration: const Duration(milliseconds: 1000));
-    int lastRotatedIndex;
-    _rotatedPosters.length < 1
-        ? (lastRotatedIndex = 0)
-        : (lastRotatedIndex = _rotatedPosters.length);
-    ImagePoster poster = _imagePosters.first;
-    _imagePosters.removeAt(index);
-    //reset animation
-    _controller.reset();
-    _controller.forward();
-    _rotatedPosters.insert(lastRotatedIndex, poster);
-    _rotatedPosters.length > 0
-        ? (_showPreviousIcon = true)
-        : (_showPreviousIcon = false);
-    _imagePosters.length > 0 ? (_showLastIcon = true) : (_showLastIcon = false);
-    setState(() {
-      _currentIndex += 1;
-    });
-    changeBackgroundColor(_imagePosters[0].backgroundColor);
+      listKey.currentState!.removeItem(
+          0, (_, animation) => slideImagePoster(context, 0, animation),
+          duration: const Duration(milliseconds: 1000));
+      int lastRotatedIndex;
+      _rotatedPosters.length < 1
+          ? (lastRotatedIndex = 0)
+          : (lastRotatedIndex = _rotatedPosters.length);
+      ImagePoster poster = _imagePosters.first;
+      _imagePosters.removeAt(index);
+      //reset animation
+      _controller.reset();
+      _controller.forward();
+      _rotatedPosters.insert(lastRotatedIndex, poster);
+      _rotatedPosters.length > 0
+          ? (_showPreviousIcon = true)
+          : (_showPreviousIcon = false);
+      _imagePosters.length > 0
+          ? (_showLastIcon = true)
+          : (_showLastIcon = false);
+      setState(() {
+        _currentIndex += 1;
+      });
+      changeBackgroundColor(_imagePosters[0].backgroundColor);
+    }
   }
 
   Future<void> addFirstPost(index) async {
