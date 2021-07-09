@@ -5,7 +5,10 @@
 
 
 <p align="center">
-  <img src="/Davies-K/fendi/blob/master/lib/Screenshots/Screenshot(01).png" width="350" title="hover text">
- 
+  <img src="lib/Screenshots/Screenshot(01).png" width="100%" title="hover text">
+  
 </p>
+
+<img src="lib/Screenshots/phone-home.png" width="50%" title="hover text"><img src="lib/Screenshots/phone-bottom.png" width="50%" title="hover text">
+
 
