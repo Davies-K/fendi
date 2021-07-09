@@ -6,9 +6,15 @@
 
 <p align="center">
   <img src="lib/Screenshots/Screenshot(01).png" width="100%" title="hover text">
-  
 </p>
-
+<p align="center">
+  <img src="lib/Screenshots/Screenshot(02).png" width="100%" title="hover text">
+</p>
 <img src="lib/Screenshots/phone-home.png" width="50%" title="hover text"><img src="lib/Screenshots/phone-bottom.png" width="50%" title="hover text">
-
-
+<img src="lib/Screenshots/phone-zoom.png" width="50%" title="hover text"><img src="lib/Screenshots/phone-home(2).png" width="50%" title="hover text">
+<p align="center">
+  <img src="lib/Screenshots/screenshot-zoom.png" width="100%" title="hover text">
+</p>
+<p align="center">
+  <img src="lib/Screenshots/Adam-Sorensen.png" width="100%" title="hover text">
+</p>
