@@ -147,7 +147,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           height: MediaQuery.of(context).size.height,
           child: Center(
               child: Container(
-                  height: Utils.screenHeight * 0.38,
+                  height: Utils.screenHeight * 0.35,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.transparent,
                   child: Row(
