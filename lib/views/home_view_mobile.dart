@@ -152,7 +152,7 @@ class _HomeMobileViewState extends State<HomeMobileView>
 
                   )),
           Positioned(
-              top: 20,
+              top: 40,
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.750,
                 child: Row(
