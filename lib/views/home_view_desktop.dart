@@ -102,7 +102,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
                                       fontWeight: FontWeight.w600)),
                             ])),
                     Positioned(
-                        bottom: Utils.screenHeight * 0.05,
+                        bottom: Utils.screenHeight * 0.03,
                         right: 20,
                         child: Container(
                           width: 150,
@@ -147,7 +147,7 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           height: MediaQuery.of(context).size.height,
           child: Center(
               child: Container(
-                  height: Utils.screenHeight * 0.35,
+                  height: Utils.screenHeight * 0.33,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.transparent,
                   child: Row(
