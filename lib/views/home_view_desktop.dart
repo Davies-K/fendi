@@ -229,10 +229,11 @@ class _HomeDesktopViewState extends State<HomeDesktopView>
           0, (_, animation) => slideImagePoster(context, 0, animation),
           duration: const Duration(milliseconds: 1000));
       int lastRotatedIndex;
+      ImagePoster poster = _imagePosters.first;
       _rotatedPosters.length < 1
           ? (lastRotatedIndex = 0)
           : (lastRotatedIndex = _rotatedPosters.length);
-      ImagePoster poster = _imagePosters.first;
+
       _imagePosters.removeAt(index);
       //reset animation
       _controller.reset();

@@ -104,23 +104,16 @@ class _AdamDesktopViewState extends State<AdamDesktopView> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                // AnimatedSwitcher(
-                                //   duration: const Duration(milliseconds: 500),
-                                //   transitionBuilder: (Widget child,
-                                //       Animation<double> animation) {
-                                //     return ScaleTransition(
-                                //         child: child, scale: animation);
-                                //   },
-                                //   child: Text(
-                                //     '$_count',
-                                //     // This key causes the AnimatedSwitcher to interpret this as a "new"
-                                //     // child each time the count changes, so that it will begin its animation
-                                //     // when the count changes.
-                                //     key: ValueKey<int>(_count),
-                                //     style:
-                                //         Theme.of(context).textTheme.headline4,
-                                //   ),
-                                // ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("PREVIOUS",
+                                        style: TextStyle(color: Colors.white)),
+                                    Icon(Icons.horizontal_rule,
+                                        color: Colors.white),
+                                  ],
+                                ),
                                 Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.4,
