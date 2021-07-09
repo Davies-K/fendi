@@ -7,18 +7,21 @@
 <p align="center">
   <img src="lib/Screenshots/Screenshot(01).png" width="100%" title="homescreen1">
 </p>
+
+Portfolio inspired by <a href="https://dribbble.com/shots/10722222-Adam-Sorensen-Portfolio">Adam Sorensen on Dribble.</a> Animations for this portfolio is not yet completed.
 <p align="center">
-  <img src="lib/Screenshots/Screenshot(02).png" width="100%" title="homescreen2">
+  <img src="lib/Screenshots/Adam-Sorensen.png" width="100%" title="Adam Sorensen">
 </p>
 
 <img src="lib/Screenshots/phone-home.png" width="50%" title="mobile home"><img src="lib/Screenshots/phone-bottom.png" width="50%" title="mobile bottomSheet">
 <img src="lib/Screenshots/phone-zoom.png" width="50%" title="mobile zoomed image"><img src="lib/Screenshots/phone-home(2).png" width="50%" title="mobile home2">
 
 <p align="center">
+  <img src="lib/Screenshots/Screenshot(02).png" width="100%" title="homescreen2">
+</p>
+
+<p align="center">
   <img src="lib/Screenshots/screenshot-zoom.png" width="100%" title="web zoomed">
 </p>
 
-Portfolio inspired by <a href="https://dribbble.com/shots/10722222-Adam-Sorensen-Portfolio">Adam Sorensen on Dribble.</a>
-<p align="center">
-  <img src="lib/Screenshots/Adam-Sorensen.png" width="100%" title="Adam Sorensen">
-</p>
+
