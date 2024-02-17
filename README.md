@@ -8,6 +8,8 @@
   <img src="lib/Screenshots/Screenshot(01).png" width="100%" title="homescreen1">
 </p>
 
+https://twitter.com/i/status/1413525493182353408
+
 Portfolio inspired by <a href="https://dribbble.com/shots/10722222-Adam-Sorensen-Portfolio">Adam Sorensen on Dribble.</a> Animations for this portfolio is not yet completed.
 <p align="center">
   <img src="lib/Screenshots/Adam-Sorensen.png" width="100%" title="Adam Sorensen">
